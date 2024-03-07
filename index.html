@@ -39,14 +39,16 @@
         generateButton.addEventListener("click", function () {
           result.innerHTML = "";
           const searchWords = input.value.split("\n");
-          for (const [i, searchWord] of Object.entries(searchWords)) {
+          let numbering = 0;
+          for (const searchWord of searchWords) {
             if (/^\s*$/.test(searchWord)) continue;
+            numbering++;
             const encodedSearchWord = encodeURIComponent(searchWord);
             const link = `mkdictionaries:///?text=${encodedSearchWord}`;
             console.log(link);
             const el = genEl(`
               <div class="word">
-                <span class="numbering">${+i + 1}.</span>
+                <span class="numbering">${numbering}.</span>
                 <a href="${link}">${searchWord}</a>
               </div>
             `);
