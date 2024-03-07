@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>物書堂リンクジェネレータ</title>
+    <style>
+      #wrapper {
+        margin: 10px;
+      }
+      #result {
+        margin-top: 10px;
+      }
+      .word {
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wrapper">
+      <h1>物書堂リンクジェネレータ</h1>
+      <p>
+        テキストボックスに改行区切りの検索語句のリストを入力し、生成ボタンを押すと物書堂アプリで検索ができるリンクが生成されます。<br />
+        本ページは<a href="https://www.monokakido.jp/ja/">物書堂</a
+        >とは関係ありません。
+      </p>
+      <textarea name="" id="input" cols="30" rows="10"></textarea><br />
+      <button id="generateButton">生成</button>
+      <div id="result"></div>
+    </div>
+    <script>
+      (function () {
+        "use strict";
+
+        const input = document.querySelector("#input");
+        const generateButton = document.querySelector("#generateButton");
+        const result = document.querySelector("#result");
+
+        generateButton.addEventListener("click", function () {
+          result.innerHTML = "";
+          const searchWords = input.value.split("\n");
+          for (const [i, searchWord] of Object.entries(searchWords)) {
+            if (/^\s*$/.test(searchWord)) continue;
+            const encodedSearchWord = encodeURIComponent(searchWord);
+            const link = `mkdictionaries:///?text=${encodedSearchWord}`;
+            console.log(link);
+            const el = genEl(`
+              <div class="word">
+                <span class="numbering">${+i + 1}.</span>
+                <a href="${link}">${searchWord}</a>
+              </div>
+            `);
+            result.append(el);
+          }
+        });
+
+        function genEl(html) {
+          const div = document.createElement("div");
+          div.innerHTML = html;
+          return div.firstElementChild;
+        }
+      })();
+    </script>
+  </body>
+</html>
